@@ -7,6 +7,7 @@ let cors = require("cors")
 let PORT = parseInt(process.env.PORT,10) || 3005;
 let connection = require("./config/db.connect.js");
 const homeRouter = require("./routes/home.routes.js");
+const authRouter = require("./routes/auth.routes.js");
 
 
 //initializing the express
@@ -21,6 +22,7 @@ app.use(cors({
   }))
 app.use(express.json()) // for parsing the req.body
 app.use("/home-page",homeRouter) // Parent router for all home page related content
+app.use("/auth",authRouter) // Parent router for registration and login
 
 //Home Route for the server
 app.get("/",(req,res)=>{

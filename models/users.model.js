@@ -1,10 +1,11 @@
 //packages
-let {Schema,model} = require("mongoose")
+let mongoose = require("mongoose")
 
 //local imports
+let BeautyModel = require("../models/beauties.model.js")
 
 //schema for storing users data
-let userSchema = Schema({
+let userSchema = mongoose.Schema({
     userName: {
         type:String,
         required:true
@@ -22,8 +23,15 @@ let userSchema = Schema({
         type: Number,
         required: true
     },
+    role:{
+        type:String,
+        default:"customer",
+        required:true
+    }
 })
 
 //Model creation
+let UserModel = mongoose.model("User",userSchema)
 
 //Exporting the model
+module.exports = UserModel;

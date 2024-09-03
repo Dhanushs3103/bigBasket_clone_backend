@@ -35,6 +35,6 @@ app.listen(PORT,async()=>{
     await connection;
     console.log(`Server is running at PORT - ${PORT} and connected the database`)
   } catch (error) {
-    res.status(500).send(error)
+    console.log(error)
   }
 })

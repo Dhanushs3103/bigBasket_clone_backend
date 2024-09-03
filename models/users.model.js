@@ -28,7 +28,7 @@ let userSchema = mongoose.Schema({
         default:"customer",
         required:true
     }
-})
+},{versionKey:false})
 
 //Model creation
 let UserModel = mongoose.model("User",userSchema)

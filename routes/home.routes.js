@@ -13,6 +13,7 @@ let KitchensModel = require("../models/kitchens.model.js")
 let SmartBasketsModel = require("../models/smartBaskets.model.js")
 let SnacksModel = require("../models/snacks.model.js")
 let TopOffersModel = require("../models/topOffers.model.js")
+let TopSliderModel = require("../models/topSliders.model.js")
 
 //parent router
 let homeRouter = express.Router();
@@ -26,6 +27,17 @@ homeRouter.get("/best-sellers",async(req,res)=>{
     } catch (error) {
         res.status(500).json({message:error})
     }
+})
+
+//Endpoint to get data related to topSliders
+homeRouter.get("/top-sliders",async(req,res)=>{
+  try {
+    let DBdata = await TopSliderModel.find();
+    //sending the response with data
+    res.status(200).json({message:"Data Received Successfully",data:DBdata})
+  } catch (error) {
+      res.status(500).json({message:error})
+  }
 })
 
 //Endpoint to get data related to smartBaskets

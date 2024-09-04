@@ -27,7 +27,12 @@ let userSchema = mongoose.Schema({
         type:String,
         default:"customer",
         required:true
+    },
+    cart:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart"
     }
+    
 },{versionKey:false})
 
 //Model creation

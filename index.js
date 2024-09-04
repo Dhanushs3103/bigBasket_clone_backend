@@ -8,7 +8,9 @@ let PORT = parseInt(process.env.PORT,10) || 3005;
 let connection = require("./config/db.connect.js");
 const homeRouter = require("./routes/home.routes.js");
 const authRouter = require("./routes/auth.routes.js");
-
+const addToCart = require("./routes/addToCart.routes.js");
+let authenticate = require("./middlewares/auth.middleware.js")
+let checkout = require("./routes/checkout.routes.js")
 
 //initializing the express
 let app = express();
@@ -23,6 +25,8 @@ app.use(cors({
 app.use(express.json()) // for parsing the req.body
 app.use("/home-page",homeRouter) // Parent router for all home page related content
 app.use("/auth",authRouter) // Parent router for registration and login
+app.use("/add-to-cart",addToCart) //Parent router for addToCart
+app.use("/checkout",checkout) //Parent router for checkout
 
 //Home Route for the server
 app.get("/",(req,res)=>{
@@ -38,3 +42,5 @@ app.listen(PORT,async()=>{
     console.log(error)
   }
 })
+
+

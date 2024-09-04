@@ -18,21 +18,7 @@ const smartBasketSchema =  mongoose.Schema({
     type: [String],
     required: true
   },
-  priceByWeight: [
-    {
-      weight: {
-        type: String,
-        required: true
-      },
-      price: {
-        type: Number,
-        required: true
-      },
-      MRP: {
-        type: Number
-      }
-    }
-  ]
+  price:{type:Number,required:true}
 }, {
   versionKey: false,
   timestamps: true

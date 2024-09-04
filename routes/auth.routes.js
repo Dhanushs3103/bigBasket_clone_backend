@@ -8,6 +8,8 @@ let JWT_SECRET_KEY_1 = process.env.JWT_SECRET_KEY_1;
 let JWT_SECRET_KEY_2 = process.env.JWT_SECRET_KEY_2;
 let SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS, 10);
 let UserModel = require("../models/users.model.js");
+let BlackListedTokenModel = require("../models/blacklistedToken.model.js")
+let authenticate = require("../middlewares/auth.middleware.js")
 
 //parent Router
 let authRouter = express.Router();
@@ -17,19 +19,6 @@ async function generateAccessToken(payload,duration){
   try {
     //generating the token
     let token = jwt.sign(payload,JWT_SECRET_KEY_1,duration)
-    //return the token 
-    return token
-  } catch (error) {
-    console.log(error)
-    return null
-  }
-}
-
-//function to generate refresh token
-async function generateRefreshToken(payload){
-  try {
-    //generating the token
-    let token = jwt.sign(payload,JWT_SECRET_KEY_2,{expiresIn:"12h"})
     //return the token 
     return token
   } catch (error) {
@@ -77,7 +66,6 @@ authRouter.post("/register", async (req, res) => {
     }
   });
 
-
 //Endpoint for Login the user
 authRouter.post("/login",async(req,res)=>{
   try {
@@ -97,12 +85,10 @@ authRouter.post("/login",async(req,res)=>{
       //if result is true
       if(result){
         // generating the tokens
-        let accessToken = await generateAccessToken({userId:user._id},{expiresIn:"15m"});
-        let refreshToken = await generateRefreshToken({userId:user._id});
+        let accessToken = await generateAccessToken({userId:user._id},{expiresIn:"12h"});
         //setting the tokens to the response headers
         res.header({
-          "Authorization": `Bearer ${accessToken}`,
-          "X-Refresh-Token": `Bearer ${refreshToken}`
+          "Authorization": `Bearer ${accessToken}`
         });
         //sending login success response
         res.status(200).json({message:"Login successful"})
@@ -112,6 +98,29 @@ authRouter.post("/login",async(req,res)=>{
     })
   } catch (error) {
     res.status(500).json({message:error})
+  }
+})
+
+//Endpoint to logout the user
+authRouter.post("/logout",authenticate,async(req,res)=>{
+  try {
+    //destructuring the token
+    let {token} = req.body;
+    if(!token) return res.status(404).json({message:"Please provide token"})
+    //checking if token exits in DB
+    let tokenInDb = await BlackListedTokenModel.findOne({token});
+    //if token exits
+    if(tokenInDb) {
+      return res.status(409).json({message:"Token already exits, please login"})
+    } 
+    // adding data to DB
+    let newToken = await new BlackListedTokenModel({token});
+    //saving to database
+    await newToken.save();
+    //sending response
+    res.status(200).json({message:"Logout successful"})
+  } catch (error) {
+    res.status(500).json({message:error.message})
   }
 })
 

@@ -51,7 +51,6 @@ addToCart.post("/add", authenticate, async (req, res) => {
     } else {
       const productPrice = parseFloat(product.price);
       if (isNaN(productPrice)) {
-        
         return res.status(400).json({ message: "Invalid product price" ,data:product });
       }
       // Add a new item to the cart

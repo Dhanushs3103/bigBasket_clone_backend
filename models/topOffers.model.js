@@ -5,14 +5,7 @@ let mongoose = require('mongoose')
 
 //Schema creation
 let topOfferSchema = mongoose.Schema({
-    top:{
-        type:String,
-        required:true
-    },
-    down:{
-        type:String,
-        required:true
-    }
+   image:{type:String,required:true}
 },{
     versionKey:false,
     timeStamps:true
